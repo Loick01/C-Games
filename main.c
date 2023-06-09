@@ -63,6 +63,103 @@ void actualiserWindow(SDL_Renderer *renderer,SDL_Window *window){
     SDL_RenderClear(renderer);
 }
 
+typedef struct{
+	int score;
+    int direction; // 1 vers la droite, -1 vers la gauche
+    int player_x;
+    int duree;
+    int wrong;
+} Values_game_1;
+
+Values_game_1* init_game_1(){
+	Values_game_1* values = malloc(sizeof(Values_game_1));
+	(*values).score = 0;
+	(*values).direction = 1;
+	(*values).player_x = SPACE_X;
+	(*values).duree = TIME;
+	(*values).wrong = 0;
+	return values;
+}
+
+int play_game_1(Values_game_1* values,SDL_Renderer *renderer,SDL_Window *window,int cible_length,int cible_x,int vitesse){
+	SDL_Event game_1_event; 
+	if (SDL_PollEvent(&game_1_event)){
+		if(game_1_event.type == SDL_QUIT){
+			values->duree = 0;
+			return 0;
+		}
+		else if (game_1_event.type == SDL_KEYDOWN && values->wrong == 0){
+			if(game_1_event.key.keysym.scancode == SDL_SCANCODE_SPACE){
+            	if ( values->player_x >= cible_x && cible_x + cible_length >= values->player_x 
+            		||
+            		values->player_x + PLAYER_WIDTH >= cible_x && cible_x + cible_length >= values->player_x + PLAYER_WIDTH){
+            		values->score++;
+            		return 0;
+            	} else {
+            		values->wrong = 50;
+            	}		
+			}
+		}
+	}
+
+	if (values->wrong > 0){
+		values->wrong--;
+	}	
+    actualiserWindow(renderer,window);
+    dessiner_rect(bande_color, SPACE_X, SPACE_Y,SPACE_WIDTH,SPACE_HEIGHT);
+   	dessiner_rect(cible_color,cible_x,SPACE_Y,cible_length,SPACE_HEIGHT); 
+    dessiner_rect(values->wrong == 0 ? player_color : wrong_color ,values->player_x,(WINDOW_HEIGHT / 2) - (PLAYER_HEIGHT / 2),PLAYER_WIDTH,PLAYER_HEIGHT);	
+    values->player_x += (vitesse * values->direction);
+    if (values->player_x <= SPACE_X){
+    	values->direction = 1;
+    }else if (values->player_x + PLAYER_WIDTH >= SPACE_X + SPACE_WIDTH){
+    	values->direction = -1;
+    }
+    return 1;
+}
+
+int main_menu(){
+	int* x = malloc(sizeof(int));
+    int* y = malloc(sizeof(int));
+    SDL_Event menu_event;  
+   	SDL_Point point;
+   	
+   	actualiserWindow(renderer,window);
+   	SDL_SetRenderDrawColor(renderer, button1_color.r, button1_color.g, button1_color.b, button1_color.a);
+    SDL_Rect button1 = {BUTTON_X,100,BUTTON_WIDTH,BUTTON_HEIGHT};
+    SDL_RenderFillRect(renderer, &button1);
+    SDL_SetRenderDrawColor(renderer, button2_color.r, button2_color.g, button2_color.b, button2_color.a);
+    SDL_Rect button2 = {BUTTON_X,350,BUTTON_WIDTH,BUTTON_HEIGHT};
+    SDL_RenderFillRect(renderer, &button2);
+    SDL_RenderPresent(renderer);
+    
+   	int choix = 0;
+    while (choix == 0){
+    	if (SDL_WaitEvent(&menu_event)){
+			if(menu_event.type == SDL_QUIT){
+				free(x);
+				free(y);
+				return clean_quit(renderer,window);
+			}
+			if(menu_event.type == SDL_MOUSEBUTTONDOWN){
+				if(menu_event.button.button == SDL_BUTTON_LEFT){
+					SDL_GetMouseState(x,y);
+					point.x = *x;
+					point.y = *y;
+					if (SDL_PointInRect(&point,&button1)){
+						choix = 1;
+					}else if(SDL_PointInRect(&point,&button2)){
+						choix = 2;
+					}
+				}
+			}
+		}
+    }
+    free(x);
+    free(y);
+    return choix;
+}
+
 
 int main(int argc, char *argv[]){
 	srand(time(NULL));
@@ -86,104 +183,37 @@ int main(int argc, char *argv[]){
     }
 
     st = EXIT_SUCCESS;
-    SDL_Event event;  
     
-    // Main menu
-    int choix = 0;
-    int* x = malloc(sizeof(int));
-    int* y = malloc(sizeof(int));
-   	SDL_Point point;
-   	
-   	actualiserWindow(renderer,window);
-   	SDL_SetRenderDrawColor(renderer, button1_color.r, button1_color.g, button1_color.b, button1_color.a);
-    SDL_Rect button1 = {BUTTON_X,100,BUTTON_WIDTH,BUTTON_HEIGHT};
-    SDL_RenderFillRect(renderer, &button1);
-    SDL_SetRenderDrawColor(renderer, button2_color.r, button2_color.g, button2_color.b, button2_color.a);
-    SDL_Rect button2 = {BUTTON_X,350,BUTTON_WIDTH,BUTTON_HEIGHT};
-    SDL_RenderFillRect(renderer, &button2);
-    SDL_RenderPresent(renderer);
+    int choix = main_menu();
     
     
-    while (choix == 0){
-    	if (SDL_WaitEvent(&event)){
-			if(event.type == SDL_QUIT){
-				return clean_quit(renderer,window);
-			}
-			if(event.type == SDL_MOUSEBUTTONDOWN){
-				if(event.button.button == SDL_BUTTON_LEFT){
-					SDL_GetMouseState(x,y);
-					point.x = *x;
-					point.y = *y;
-					if (SDL_PointInRect(&point,&button1)){
-						choix = 1;
-					}else if(SDL_PointInRect(&point,&button2)){
-						choix = 2;
-					}
-				}
-			}
-		}
+    Values_game_1* values;
+    
+    if (choix == 1){
+    	values = init_game_1();
+    }else if (choix == 2){
+    	printf("Choix 2\n");
+    	//Values_game_2* values = init_game_2();
+    	return clean_quit(renderer,window);
     }
     
-    free(x);
-    free(y);
-    
-    printf("Le choix est %d\n",choix);
-             
-    int score = 0;
-    int direction = 1; // 1 vers la droite, -1 vers la gauche
-    int player_x = 50;
-    int duree = TIME;
-    
-    int wrong = 0;
-    while (duree > 0){
+    while (values->duree > 0){
     	int cible_length = MIN_SIZE_CIBLE + (rand() % MAX_SIZE_CIBLE);
     	int cible_x = SPACE_X + (rand() % ((SPACE_WIDTH + SPACE_X) - cible_length));
 		int vitesse = MIN_SPEED + (rand() % MAX_SPEED);
 		
-    	while(1){
-    		if (SDL_PollEvent(&event)){
-				if(event.type == SDL_QUIT){
-					printf("Votre score est de %d !\n", score);
-				   	return clean_quit(renderer,window);
-				}
-				else if (event.type == SDL_KEYDOWN && wrong == 0){
-					if(event.key.keysym.scancode == SDL_SCANCODE_SPACE){
-            			if ( player_x >= cible_x && cible_x + cible_length >= player_x 
-            				||
-            				 player_x + PLAYER_WIDTH >= cible_x && cible_x + cible_length >= player_x + PLAYER_WIDTH){
-            				score++;
-            				break;
-            			} else {
-            				wrong = 50;
-            			}		
-					}
-				}
-			}
-			
-			if (wrong > 0){
-				wrong--;
-			}
-    	
-        	actualiserWindow(renderer,window);
-        	dessiner_rect(bande_color, SPACE_X, SPACE_Y,SPACE_WIDTH,SPACE_HEIGHT);
-    		dessiner_rect(cible_color,cible_x,SPACE_Y,cible_length,SPACE_HEIGHT); 
-    		dessiner_rect(wrong == 0 ? player_color : wrong_color ,player_x,(WINDOW_HEIGHT / 2) - (PLAYER_HEIGHT / 2),PLAYER_WIDTH,PLAYER_HEIGHT);
-    		
-    		player_x += (vitesse * direction);
-    		if (player_x <= SPACE_X){
-    			direction = 1;
-    		}else if (player_x + PLAYER_WIDTH >= SPACE_X + SPACE_WIDTH){
-    			direction = -1;
-    		}
-    		
+		int play = 1;		
+    	while(play){
+    		play = play_game_1(values,renderer,window,cible_length,cible_x,vitesse);
 		    SDL_RenderPresent(renderer);
-		    duree -= REFRESH;
+		    values->duree -= REFRESH;
 		    SDL_Delay(REFRESH); 
     	}
     	
     }
     
-    printf("Votre score est de %d !\n", score);
+    printf("Votre score est de %d !\n", values->score);
+    free(values);
 	return clean_quit(renderer,window);
 
 }
