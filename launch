@@ -1,3 +1,0 @@
-gcc main.c $(sdl2-config --cflags --libs) -lSDL_mixer
-./a.out
-rm a.out

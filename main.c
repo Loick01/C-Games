@@ -12,7 +12,7 @@
 #define PLAYER_WIDTH 20
 #define PLAYER_HEIGHT 200
 
-#define SPACE_WIDTH 700
+#define SPACE_WIDTH WINDOW_WIDTH - (2 * SPACE_X)
 #define SPACE_HEIGHT 40
 #define SPACE_X 50
 #define SPACE_Y 280
