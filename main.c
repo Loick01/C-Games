@@ -63,61 +63,6 @@ void actualiserWindow(SDL_Renderer *renderer,SDL_Window *window){
     SDL_RenderClear(renderer);
 }
 
-typedef struct{
-	int score;
-    int direction; // 1 vers la droite, -1 vers la gauche
-    int player_x;
-    int duree;
-    int wrong;
-} Values_game_1;
-
-Values_game_1* init_game_1(){
-	Values_game_1* values = malloc(sizeof(Values_game_1));
-	(*values).score = 0;
-	(*values).direction = 1;
-	(*values).player_x = SPACE_X;
-	(*values).duree = TIME;
-	(*values).wrong = 0;
-	return values;
-}
-
-int play_game_1(Values_game_1* values,SDL_Renderer *renderer,SDL_Window *window,int cible_length,int cible_x,int vitesse){
-	SDL_Event game_1_event; 
-	if (SDL_PollEvent(&game_1_event)){
-		if(game_1_event.type == SDL_QUIT){
-			values->duree = 0;
-			return 0;
-		}
-		else if (game_1_event.type == SDL_KEYDOWN && values->wrong == 0){
-			if(game_1_event.key.keysym.scancode == SDL_SCANCODE_SPACE){
-            	if ( values->player_x >= cible_x && cible_x + cible_length >= values->player_x 
-            		||
-            		values->player_x + PLAYER_WIDTH >= cible_x && cible_x + cible_length >= values->player_x + PLAYER_WIDTH){
-            		values->score++;
-            		return 0;
-            	} else {
-            		values->wrong = 50;
-            	}		
-			}
-		}
-	}
-
-	if (values->wrong > 0){
-		values->wrong--;
-	}	
-    actualiserWindow(renderer,window);
-    dessiner_rect(bande_color, SPACE_X, SPACE_Y,SPACE_WIDTH,SPACE_HEIGHT);
-   	dessiner_rect(cible_color,cible_x,SPACE_Y,cible_length,SPACE_HEIGHT); 
-    dessiner_rect(values->wrong == 0 ? player_color : wrong_color ,values->player_x,(WINDOW_HEIGHT / 2) - (PLAYER_HEIGHT / 2),PLAYER_WIDTH,PLAYER_HEIGHT);	
-    values->player_x += (vitesse * values->direction);
-    if (values->player_x <= SPACE_X){
-    	values->direction = 1;
-    }else if (values->player_x + PLAYER_WIDTH >= SPACE_X + SPACE_WIDTH){
-    	values->direction = -1;
-    }
-    return 1;
-}
-
 int main_menu(){
 	int* x = malloc(sizeof(int));
     int* y = malloc(sizeof(int));
@@ -160,6 +105,85 @@ int main_menu(){
     return choix;
 }
 
+typedef struct{
+	int score;
+    int direction; // 1 vers la droite, -1 vers la gauche
+    int player_x;
+    int duree;
+    int wrong;
+} Values_game_1;
+
+typedef struct{ // Pas encore fait
+	int score;
+    int direction; // 1 vers la droite, -1 vers la gauche
+    int player_x;
+    int duree;
+    int wrong;
+} Values_game_2;
+
+Values_game_1* init_game_1(){
+	Values_game_1* values = malloc(sizeof(Values_game_1));
+	(*values).score = 0;
+	(*values).direction = 1;
+	(*values).player_x = SPACE_X;
+	(*values).duree = TIME;
+	(*values).wrong = 0;
+	return values;
+}
+
+
+int play_game_1(SDL_Event game_event,Values_game_1* values,SDL_Renderer *renderer,SDL_Window *window,int cible_length,int cible_x,int vitesse){
+	if (SDL_PollEvent(&game_event)){
+		if(game_event.type == SDL_QUIT){
+			values->duree = 0;
+			return 0;
+		}
+		else if (game_event.type == SDL_KEYDOWN && values->wrong == 0){
+			if(game_event.key.keysym.scancode == SDL_SCANCODE_SPACE){
+            	if ( values->player_x >= cible_x && cible_x + cible_length >= values->player_x 
+            		||
+            		values->player_x + PLAYER_WIDTH >= cible_x && cible_x + cible_length >= values->player_x + PLAYER_WIDTH){
+            		values->score++;
+            		return 0;
+            	} else {
+            		values->wrong = 50;
+            	}		
+			}
+		}
+	}
+
+	if (values->wrong > 0){
+		values->wrong--;
+	}	
+    actualiserWindow(renderer,window);
+    dessiner_rect(bande_color, SPACE_X, SPACE_Y,SPACE_WIDTH,SPACE_HEIGHT);
+   	dessiner_rect(cible_color,cible_x,SPACE_Y,cible_length,SPACE_HEIGHT); 
+    dessiner_rect(values->wrong == 0 ? player_color : wrong_color ,values->player_x,(WINDOW_HEIGHT / 2) - (PLAYER_HEIGHT / 2),PLAYER_WIDTH,PLAYER_HEIGHT);	
+    values->player_x += (vitesse * values->direction);
+    if (values->player_x <= SPACE_X){
+    	values->direction = 1;
+    }else if (values->player_x + PLAYER_WIDTH >= SPACE_X + SPACE_WIDTH){
+    	values->direction = -1;
+    }
+    return 1;
+}
+
+void main_loop_game_1(SDL_Event game_event,Values_game_1* values,SDL_Renderer *renderer,SDL_Window *window){
+	while (values->duree > 0){
+    	int cible_length = MIN_SIZE_CIBLE + (rand() % MAX_SIZE_CIBLE);
+    	int cible_x = SPACE_X + (rand() % (SPACE_WIDTH - cible_length));
+		int vitesse = MIN_SPEED + (rand() % MAX_SPEED);
+		
+		int play = 1;		
+    	while(play){
+    		play = play_game_1(game_event,values,renderer,window,cible_length,cible_x,vitesse);
+		    SDL_RenderPresent(renderer);
+		    values->duree -= REFRESH;
+		    SDL_Delay(REFRESH); 
+    	}	
+    }
+     printf("Votre score est de %d !\n", values->score);
+}
 
 int main(int argc, char *argv[]){
 	srand(time(NULL));
@@ -186,34 +210,22 @@ int main(int argc, char *argv[]){
     
     int choix = main_menu();
     
-    
-    Values_game_1* values;
+    void* values;
+    SDL_Event game_event;
     
     if (choix == 1){
     	values = init_game_1();
+    	main_loop_game_1(game_event,(Values_game_1*)values,renderer,window);
     }else if (choix == 2){
     	printf("Choix 2\n");
-    	//Values_game_2* values = init_game_2();
+    	//values = init_game_2();
     	return clean_quit(renderer,window);
     }
     
-    while (values->duree > 0){
-    	int cible_length = MIN_SIZE_CIBLE + (rand() % MAX_SIZE_CIBLE);
-    	int cible_x = SPACE_X + (rand() % ((SPACE_WIDTH + SPACE_X) - cible_length));
-		int vitesse = MIN_SPEED + (rand() % MAX_SPEED);
-		
-		int play = 1;		
-    	while(play){
-    		play = play_game_1(values,renderer,window,cible_length,cible_x,vitesse);
-		    SDL_RenderPresent(renderer);
-		    values->duree -= REFRESH;
-		    SDL_Delay(REFRESH); 
-    	}
-    	
-    }
-    
-    printf("Votre score est de %d !\n", values->score);
     free(values);
 	return clean_quit(renderer,window);
-
 }
+
+
+
+
