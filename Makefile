@@ -1,3 +1,5 @@
+CC = gcc
+CFLAGS = -Wall -Wextra -g
 
 launch :
 	make build
@@ -5,11 +7,17 @@ launch :
 	make clean
 	
 run :
-	./exec
-
-build :
-	gcc -o exec main.c -lSDL2
+	./exe
 	
 clean :
-	rm exec
+	rm exe *.o
+	
+build : all.o game1.o main.o
+	$(CC) $(CFLAGS) -o exe all.o game1.o main.o -lSDL2
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+	
+	
 
