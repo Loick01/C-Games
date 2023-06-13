@@ -20,10 +20,10 @@
 #define BGC 0
 #define BUTTON1_COLOR 1
 #define BUTTON2_COLOR 2
-#define CIBLE_COLOR 3
-#define BANDE_COLOR 4
-#define PLAYER_COLOR 5
-#define WRONG_COLOR 6
+#define GREEN_COLOR 3
+#define WHITE_COLOR 4
+#define BLACK_COLOR 5
+#define RED_COLOR 6
 
 
 SDL_Color *colors;

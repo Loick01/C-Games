@@ -4,18 +4,18 @@ void initialisation(){
 	SDL_Color bgc = {2, 81, 112, 255};
 	SDL_Color button1_color = {230, 146, 21, 255};
 	SDL_Color button2_color = {166, 8, 16, 255};
-	SDL_Color cible_color = {5, 99, 35, 255};
-	SDL_Color bande_color = {255,255,255,255};
-	SDL_Color player_color = {0,0,0,255};
-	SDL_Color wrong_color = {240,20,20,255};
+	SDL_Color green_color = {5, 99, 35, 255};
+	SDL_Color white_color = {255,255,255,255};
+	SDL_Color black_color = {0,0,0,255};
+	SDL_Color red_color = {240,20,20,255};
 	colors = malloc(sizeof(SDL_Color)*NB_COLOR);
 	colors[0] = bgc;
 	colors[1] = button1_color;
 	colors[2] = button2_color;
-	colors[3] = cible_color;
-	colors[4] = bande_color;
-	colors[5] = player_color;
-	colors[6] = wrong_color;
+	colors[3] = green_color;
+	colors[4] = white_color;
+	colors[5] = black_color;
+	colors[6] = red_color;
 
 	st = EXIT_FAILURE;
 

@@ -12,8 +12,8 @@ run :
 clean :
 	rm exe *.o
 	
-build : all.o game1.o main.o
-	$(CC) $(CFLAGS) -o exe all.o game1.o main.o -lSDL2
+build : all.o game1.o game2.o main.o
+	$(CC) $(CFLAGS) -o exe all.o game1.o game2.o main.o -lSDL2
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

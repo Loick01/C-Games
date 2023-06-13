@@ -1,4 +1,5 @@
 #include "game1.h"
+#include "game2.h"
 
 int main(/*int argc, char *argv[]*/){
 	srand(time(NULL));
@@ -13,9 +14,8 @@ int main(/*int argc, char *argv[]*/){
     	values = init_game_1();
     	main_loop_game_1(game_event,(Values_game_1*)values,renderer);
     }else if (choix == 2){
-    	printf("Choix 2\n");
-    	//values = init_game_2();
-    	return clean_quit();
+    	values = init_game_2();
+    	main_loop_game_2(game_event,(Values_game_2*)values,renderer);
     }
     
     free(values);

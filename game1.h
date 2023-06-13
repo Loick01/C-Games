@@ -3,9 +3,6 @@
 
 #include "all.h"
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
-
 #define MIN_SIZE_CIBLE 50
 #define MAX_SIZE_CIBLE 200
 
