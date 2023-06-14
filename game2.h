@@ -3,10 +3,11 @@
 
 #include "all.h"
 
-#define MIN_SQUARE_SIZE 25
+#define MIN_SQUARE_SIZE 10
 #define MAX_SQUARE_SIZE 120
 
-#define PLAY_AREA_LIMIT 10
+#define PLAY_AREA_LIMIT 30
+#define AUGMENTATION 1
 
 typedef struct{
 	int score;
