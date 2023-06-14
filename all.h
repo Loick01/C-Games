@@ -2,6 +2,7 @@
 #define ALL
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -10,20 +11,21 @@
 #define WINDOW_HEIGHT 600
 
 #define BUTTON_WIDTH 300
-#define BUTTON_HEIGHT 150
+#define BUTTON_HEIGHT 120
 #define BUTTON_X 250
 
 #define TIME 30000
 #define REFRESH 20
 
-#define NB_COLOR 7
+#define NB_COLOR 8
 #define BGC 0
 #define BUTTON1_COLOR 1
 #define BUTTON2_COLOR 2
-#define GREEN_COLOR 3
-#define WHITE_COLOR 4
-#define BLACK_COLOR 5
-#define RED_COLOR 6
+#define BUTTON3_COLOR 3
+#define GREEN_COLOR 4
+#define WHITE_COLOR 5
+#define BLACK_COLOR 6
+#define RED_COLOR 7
 
 
 SDL_Color *colors;

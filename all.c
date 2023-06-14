@@ -4,6 +4,7 @@ void initialisation(){
 	SDL_Color bgc = {2, 81, 112, 255};
 	SDL_Color button1_color = {230, 146, 21, 255};
 	SDL_Color button2_color = {166, 8, 16, 255};
+	SDL_Color button3_color = {98, 105, 76, 255};
 	SDL_Color green_color = {5, 99, 35, 255};
 	SDL_Color white_color = {255,255,255,255};
 	SDL_Color black_color = {0,0,0,255};
@@ -12,10 +13,11 @@ void initialisation(){
 	colors[0] = bgc;
 	colors[1] = button1_color;
 	colors[2] = button2_color;
-	colors[3] = green_color;
-	colors[4] = white_color;
-	colors[5] = black_color;
-	colors[6] = red_color;
+	colors[3] = button3_color;
+	colors[4] = green_color;
+	colors[5] = white_color;
+	colors[6] = black_color;
+	colors[7] = red_color;
 
 	st = EXIT_FAILURE;
 
@@ -35,6 +37,8 @@ void initialisation(){
 		fprintf(stderr, "Impossible de créer le rendu pour la fenêtre : %s", SDL_GetError());
 		clean_quit();
 	}
+	
+	TTF_Init();
 }
 
 int clean_quit(){
@@ -44,6 +48,7 @@ int clean_quit(){
     if(window != NULL){
         SDL_DestroyWindow(window);
     }
+  
     SDL_Quit();
     return st;
 }
@@ -67,11 +72,14 @@ int main_menu(){
    	
    	actualiserWindow(renderer);
    	SDL_SetRenderDrawColor(renderer, colors[BUTTON1_COLOR].r, colors[BUTTON1_COLOR].g, colors[BUTTON1_COLOR].b, colors[BUTTON1_COLOR].a);
-    SDL_Rect button1 = {BUTTON_X,100,BUTTON_WIDTH,BUTTON_HEIGHT};
+    SDL_Rect button1 = {BUTTON_X,50,BUTTON_WIDTH,BUTTON_HEIGHT};
     SDL_RenderFillRect(renderer, &button1);
     SDL_SetRenderDrawColor(renderer, colors[BUTTON2_COLOR].r, colors[BUTTON2_COLOR].g, colors[BUTTON2_COLOR].b, colors[BUTTON2_COLOR].a);
-    SDL_Rect button2 = {BUTTON_X,350,BUTTON_WIDTH,BUTTON_HEIGHT};
+    SDL_Rect button2 = {BUTTON_X,220,BUTTON_WIDTH,BUTTON_HEIGHT};
     SDL_RenderFillRect(renderer, &button2);
+    SDL_SetRenderDrawColor(renderer, colors[BUTTON3_COLOR].r, colors[BUTTON3_COLOR].g, colors[BUTTON3_COLOR].b, colors[BUTTON3_COLOR].a);
+    SDL_Rect button3 = {BUTTON_X,390,BUTTON_WIDTH,BUTTON_HEIGHT};
+    SDL_RenderFillRect(renderer, &button3);
     SDL_RenderPresent(renderer);
     
    	int choix = 0;
@@ -91,6 +99,8 @@ int main_menu(){
 						choix = 1;
 					}else if(SDL_PointInRect(&point,&button2)){
 						choix = 2;
+					}else if(SDL_PointInRect(&point,&button3)){
+						choix = 3;
 					}
 				}
 			}

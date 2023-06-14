@@ -59,6 +59,9 @@ void main_loop_game_1(SDL_Event game_event,Values_game_1* values,SDL_Renderer *r
     		play = play_game_1(game_event,values,renderer,cible_length,cible_x,vitesse);
 		    SDL_RenderPresent(renderer);
 		    values->duree -= REFRESH;
+		    if (values->duree < 0){
+		    	break;
+		    }
 		    SDL_Delay(REFRESH); 
     	}	
     }
