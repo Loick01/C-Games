@@ -17,7 +17,7 @@
 #define TIME 30000
 #define REFRESH 20
 
-#define NB_COLOR 8
+#define NB_COLOR 9
 #define BGC 0
 #define BUTTON1_COLOR 1
 #define BUTTON2_COLOR 2
@@ -26,7 +26,12 @@
 #define WHITE_COLOR 5
 #define BLACK_COLOR 6
 #define RED_COLOR 7
+#define TRANSPARENT_WHITE_COLOR 8
 
+typedef struct{
+	int score;
+    int duree;
+} Values_game_simple;
 
 SDL_Color *colors;
 SDL_Window *window;
@@ -38,5 +43,6 @@ void dessiner_rect(SDL_Color c, int x, int y, int w, int h);
 void actualiserWindow(SDL_Renderer *renderer);
 int main_menu();
 void initialisation();
+Values_game_simple* init_game_simple();
 
 #endif

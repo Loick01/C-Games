@@ -17,11 +17,11 @@ int main(/*int argc, char *argv[]*/){
     	values = init_game_1();
     	main_loop_game_1(game_event,(Values_game_1*)values,renderer);
     }else if (choix == 2){
-    	values = init_game_2();
-    	main_loop_game_2(game_event,(Values_game_2*)values,renderer);
+    	values = init_game_simple();
+    	main_loop_game_2(game_event,(Values_game_simple*)values,renderer);
     }else if (choix == 3){
-    	values = init_game_3();
-    	main_loop_game_3(game_event,(Values_game_3*)values,renderer);
+    	values = init_game_simple();
+    	main_loop_game_3(game_event,(Values_game_simple*)values,renderer);
     }
     
     free(values);

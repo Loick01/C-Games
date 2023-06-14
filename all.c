@@ -9,6 +9,7 @@ void initialisation(){
 	SDL_Color white_color = {255,255,255,255};
 	SDL_Color black_color = {0,0,0,255};
 	SDL_Color red_color = {240,20,20,255};
+	SDL_Color transparent_white_color = {255,255,255,100};
 	colors = malloc(sizeof(SDL_Color)*NB_COLOR);
 	colors[0] = bgc;
 	colors[1] = button1_color;
@@ -18,6 +19,7 @@ void initialisation(){
 	colors[5] = white_color;
 	colors[6] = black_color;
 	colors[7] = red_color;
+	colors[8] = transparent_white_color;
 
 	st = EXIT_FAILURE;
 
@@ -111,4 +113,10 @@ int main_menu(){
     return choix;
 }
 
+Values_game_simple* init_game_simple(){
+	Values_game_simple* values = malloc(sizeof(Values_game_simple));
+	(*values).score = 0;
+	(*values).duree = TIME;
+	return values;
+}
 

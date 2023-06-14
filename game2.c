@@ -1,14 +1,7 @@
 #include "game2.h"
 
-Values_game_2* init_game_2(){
-	Values_game_2* values = malloc(sizeof(Values_game_2));
-	(*values).score = 0;
-	(*values).duree = TIME;
-	return values;
-}
 
-
-int play_game_2(SDL_Event game_event,Values_game_2* values,SDL_Renderer *renderer,SDL_Rect cible,SDL_Point point,int* x,int* y){
+int play_game_2(SDL_Event game_event,Values_game_simple* values,SDL_Renderer *renderer,SDL_Rect cible,SDL_Point point,int* x,int* y){
 	while(SDL_PollEvent(&game_event)){
 		if(game_event.type == SDL_QUIT){
 			values->duree = 0;
@@ -36,7 +29,7 @@ int play_game_2(SDL_Event game_event,Values_game_2* values,SDL_Renderer *rendere
 }
 
 
-void main_loop_game_2(SDL_Event game_event,Values_game_2* values,SDL_Renderer *renderer){
+void main_loop_game_2(SDL_Event game_event,Values_game_simple* values,SDL_Renderer *renderer){
 	SDL_Point point;
 	int* x = malloc(sizeof(int));
     int* y = malloc(sizeof(int));	
