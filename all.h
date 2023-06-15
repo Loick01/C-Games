@@ -12,7 +12,11 @@
 
 #define BUTTON_WIDTH 300
 #define BUTTON_HEIGHT 120
-#define BUTTON_X 250
+
+#define BUTTON_COL1 75
+#define BUTTON_COL2 425
+#define BUTTON_LINE1 120
+#define BUTTON_LINE2 360
 
 #define TIME 30000
 #define REFRESH 20

@@ -74,14 +74,17 @@ int main_menu(){
    	
    	actualiserWindow(renderer);
    	SDL_SetRenderDrawColor(renderer, colors[BUTTON1_COLOR].r, colors[BUTTON1_COLOR].g, colors[BUTTON1_COLOR].b, colors[BUTTON1_COLOR].a);
-    SDL_Rect button1 = {BUTTON_X,50,BUTTON_WIDTH,BUTTON_HEIGHT};
+    SDL_Rect button1 = {BUTTON_COL1,BUTTON_LINE1,BUTTON_WIDTH,BUTTON_HEIGHT};
     SDL_RenderFillRect(renderer, &button1);
     SDL_SetRenderDrawColor(renderer, colors[BUTTON2_COLOR].r, colors[BUTTON2_COLOR].g, colors[BUTTON2_COLOR].b, colors[BUTTON2_COLOR].a);
-    SDL_Rect button2 = {BUTTON_X,220,BUTTON_WIDTH,BUTTON_HEIGHT};
+    SDL_Rect button2 = {BUTTON_COL1,BUTTON_LINE2,BUTTON_WIDTH,BUTTON_HEIGHT};
     SDL_RenderFillRect(renderer, &button2);
     SDL_SetRenderDrawColor(renderer, colors[BUTTON3_COLOR].r, colors[BUTTON3_COLOR].g, colors[BUTTON3_COLOR].b, colors[BUTTON3_COLOR].a);
-    SDL_Rect button3 = {BUTTON_X,390,BUTTON_WIDTH,BUTTON_HEIGHT};
+    SDL_Rect button3 = {BUTTON_COL2,BUTTON_LINE1,BUTTON_WIDTH,BUTTON_HEIGHT};
     SDL_RenderFillRect(renderer, &button3);
+     SDL_SetRenderDrawColor(renderer, colors[BUTTON3_COLOR].r, colors[BUTTON3_COLOR].g, colors[BUTTON3_COLOR].b, colors[BUTTON3_COLOR].a);
+    SDL_Rect button4 = {BUTTON_COL2,BUTTON_LINE2,BUTTON_WIDTH,BUTTON_HEIGHT};
+    SDL_RenderFillRect(renderer, &button4);
     SDL_RenderPresent(renderer);
     
    	int choix = 0;
@@ -103,6 +106,8 @@ int main_menu(){
 						choix = 2;
 					}else if(SDL_PointInRect(&point,&button3)){
 						choix = 3;
+				}else if(SDL_PointInRect(&point,&button4)){
+						choix = 4;
 					}
 				}
 			}

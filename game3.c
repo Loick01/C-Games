@@ -1,7 +1,7 @@
 #include "game3.h"
 
 int play_game_3(SDL_Event game_event,Values_game_simple* values,int lettre){
-	if (SDL_PollEvent(&game_event)){ // Peut être un while plutot (à voir)
+	if (SDL_PollEvent(&game_event)){ // while ?
 		if(game_event.type == SDL_QUIT){
 			values->duree = 0;
 			return 0;
