@@ -3,14 +3,19 @@
 
 #include "all.h"
 
-#define WIDTH_PLAYER 50
-#define HEIGHT_PLAYER 50
-#define NB_RECT_DODGE 5
-#define AWAY_FROM_WINDOW 100
+#define WIDTH_RECT 50
+#define HEIGHT_RECT 50
+#define NB_RECT_DODGE 50
 #define INITIAL_SPEED 5
-#define BASE_FRAME 35
 
-int play_game_4(SDL_Event game_event,SDL_Renderer *renderer,SDL_Rect *player_rect,SDL_Rect to_dodge, int *nb_frame,int* speed);
+typedef struct{
+	SDL_Rect r;
+	int dir_x;
+	int dir_y;
+	int lifetime;
+} Rect_Struct;
+
+int play_game_4(SDL_Event game_event,SDL_Renderer *renderer,Values_game_simple* values,SDL_Rect *player_rect,int* speed,int* nb_rect_dodge,Rect_Struct** rect_dodge);
 void main_loop_game_4(SDL_Event game_event,Values_game_simple* values,SDL_Renderer *renderer);
 
 #endif

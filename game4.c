@@ -1,48 +1,96 @@
 #include "game4.h"
 
-int play_game_4(SDL_Event game_event,SDL_Renderer *renderer,SDL_Rect *player_rect, SDL_Rect to_dodge,int *nb_frame,int* speed){
+int play_game_4(SDL_Event game_event,SDL_Renderer *renderer,Values_game_simple* values,SDL_Rect *player_rect,int* speed,int* nb_rect_dodge,Rect_Struct** rect_dodge){
 	while (SDL_PollEvent(&game_event)){
 		if(game_event.type == SDL_QUIT){
-			return 2;
+			return 0;
 		}
 	}
+	
 	const Uint8 *state = SDL_GetKeyboardState(NULL); 
 	if (state[SDL_SCANCODE_W] && player_rect->y >= 0) {
  		player_rect->y -= *speed;
 	}
-	if (state[SDL_SCANCODE_D] && player_rect->x + WIDTH_PLAYER <= WINDOW_WIDTH) {
+	if (state[SDL_SCANCODE_D] && player_rect->x + WIDTH_RECT <= WINDOW_WIDTH) {
  		player_rect->x += *speed;
 	}
-	if (state[SDL_SCANCODE_S] && player_rect->y + HEIGHT_PLAYER <= WINDOW_HEIGHT) {
+	if (state[SDL_SCANCODE_S] && player_rect->y + HEIGHT_RECT <= WINDOW_HEIGHT) {
  		player_rect->y += *speed;
 	}
 	if (state[SDL_SCANCODE_A] && player_rect->x >= 0) {
  		player_rect->x -= *speed;
 	}
 	
+	if (*nb_rect_dodge < NB_RECT_DODGE){
+		int c = rand() % ((*nb_rect_dodge + 1));
+		if (c==0){
+			Rect_Struct *new_rect = malloc(sizeof(Rect_Struct));
+			int rect_x ;
+			int rect_y ;
+			
+			int var = rand() % 4;
+			if (var == 0){
+				new_rect->dir_x = 1;
+				new_rect->dir_y = 0;
+				rect_x = 0 - WIDTH_RECT;
+				rect_y = rand() % (WINDOW_HEIGHT - HEIGHT_RECT);
+			}else if (var == 1){
+				new_rect->dir_x = -1;
+				new_rect->dir_y = 0;
+				rect_x = WINDOW_WIDTH;
+				rect_y = rand() % (WINDOW_HEIGHT - HEIGHT_RECT);
+			}
+			else if (var == 2){
+				new_rect->dir_x = 0;
+				new_rect->dir_y = 1;
+				rect_x = rand() % (WINDOW_WIDTH - WIDTH_RECT);
+				rect_y = 0 - HEIGHT_RECT;
+			}
+			else if (var == 3){
+				new_rect->dir_x = 0;
+				new_rect->dir_y = -1;
+				rect_x = rand() % (WINDOW_WIDTH - WIDTH_RECT);
+				rect_y = WINDOW_HEIGHT;
+			}
+			
+			SDL_Rect temp = {rect_x ,rect_y,WIDTH_RECT,HEIGHT_RECT};
+			new_rect->r = temp;
+			new_rect->lifetime = WINDOW_WIDTH / *speed; // est ce que speed va augmenter ? Si c'est le cas il faudra changer ici
+			rect_dodge[*nb_rect_dodge] = new_rect;
+			(*nb_rect_dodge)++;
+		}
+	}
+	
 	actualiserWindow(renderer);
 	
-	if (*nb_frame >= 2*BASE_FRAME - (*speed * 2) && *nb_frame < 4*BASE_FRAME - (*speed * 2)){
-		SDL_SetRenderDrawColor(renderer, colors[BUTTON1_COLOR].r, colors[BUTTON1_COLOR].g, 
-										colors[BUTTON1_COLOR].b, colors[BUTTON1_COLOR].a);
-		SDL_RenderFillRect(renderer, &to_dodge);
-	}else if (*nb_frame >= 4*BASE_FRAME - (*speed * 2)){
-		SDL_SetRenderDrawColor(renderer, colors[RED_COLOR].r, colors[RED_COLOR].g, colors[RED_COLOR].b, colors[RED_COLOR].a);
-		SDL_RenderFillRect(renderer, &to_dodge);
-		if (SDL_HasIntersection(player_rect,&to_dodge)){
-			return 2;
-		}
-    }
-    
-    if (*nb_frame == 5*BASE_FRAME - (*speed * 2)){
-    	*nb_frame = 0;
-    	return 0;
-    }else{
-    	(*nb_frame)++;
-    }
-    
-    SDL_SetRenderDrawColor(renderer, colors[WHITE_COLOR].r, colors[WHITE_COLOR].g, colors[WHITE_COLOR].b, colors[WHITE_COLOR].a);
+	SDL_SetRenderDrawColor(renderer, colors[WHITE_COLOR].r, colors[WHITE_COLOR].g, colors[WHITE_COLOR].b, colors[WHITE_COLOR].a);
     SDL_RenderFillRect(renderer, player_rect);
+    
+	SDL_SetRenderDrawColor(renderer, colors[RED_COLOR].r, colors[RED_COLOR].g, colors[RED_COLOR].b, colors[RED_COLOR].a);
+	
+	for (int i = 0 ; i < *nb_rect_dodge ; i++){
+    	SDL_RenderFillRect(renderer,&((rect_dodge[i]->r)));
+   
+    	if (SDL_HasIntersection(player_rect,&((rect_dodge[i]->r)))){
+    		return 0;
+    	}
+    	
+    	(rect_dodge[i])->lifetime--;
+    	(rect_dodge[i])->r.x += *speed * (rect_dodge[i])->dir_x; // Same speed than player
+    	(rect_dodge[i])->r.y += *speed * (rect_dodge[i])->dir_y; // Same speed than player
+    	
+    	
+    	if ((rect_dodge[i])->lifetime == 0){
+    		values->score++;
+    		free(rect_dodge[i]);
+    		rect_dodge[i] = rect_dodge[(*nb_rect_dodge)-1];
+    		(*nb_rect_dodge)--;
+    	}
+    	
+    	
+	}
+	
+	
     return 1;
 }
 
@@ -50,44 +98,30 @@ void main_loop_game_4(SDL_Event game_event,Values_game_simple* values,SDL_Render
 	int* speed = malloc(sizeof(int));
 	(*speed) = INITIAL_SPEED;
  	SDL_Rect *player_rect = malloc(sizeof(SDL_Rect));
- 	player_rect->x = (WINDOW_WIDTH/2)-(WIDTH_PLAYER/2);
- 	player_rect->y = (WINDOW_HEIGHT/2)-(HEIGHT_PLAYER/2);
- 	player_rect->w = WIDTH_PLAYER;
- 	player_rect->h = HEIGHT_PLAYER;
+ 	player_rect->x = (WINDOW_WIDTH/2)-(WIDTH_RECT/2);
+ 	player_rect->y = (WINDOW_HEIGHT/2)-(HEIGHT_RECT/2);
+ 	player_rect->w = WIDTH_RECT;
+ 	player_rect->h = HEIGHT_RECT;
  	
- 	int rect_x[NB_RECT_DODGE] = {0,0,0,WINDOW_WIDTH/2,AWAY_FROM_WINDOW};
- 	int rect_y[NB_RECT_DODGE] = {0,WINDOW_HEIGHT/2,0,0,AWAY_FROM_WINDOW};
-	int rect_width[NB_RECT_DODGE] = {WINDOW_WIDTH,WINDOW_WIDTH,WINDOW_WIDTH/2,WINDOW_WIDTH/2,WINDOW_WIDTH-2*AWAY_FROM_WINDOW};
- 	int rect_height[NB_RECT_DODGE] = {WINDOW_HEIGHT/2,WINDOW_HEIGHT/2,WINDOW_HEIGHT,WINDOW_HEIGHT,WINDOW_HEIGHT-2*AWAY_FROM_WINDOW};
+ 	Rect_Struct** rect_dodge = malloc(sizeof(Rect_Struct*)*NB_RECT_DODGE);
+ 	int* nb_rect_dodge = malloc(sizeof(int));
+ 	*nb_rect_dodge = 0;
  	
- 	SDL_Rect *rect_dodge = malloc(sizeof(SDL_Rect)*NB_RECT_DODGE);
- 	for (int i = 0 ; i < NB_RECT_DODGE ; i++){
- 		SDL_Rect r = {rect_x[i],rect_y[i],rect_width[i],rect_height[i]};
- 		rect_dodge[i] = r;
- 	}
- 	
- 	int b = 1;
-	while (b){
-		int play = 1;	
-		int c = rand() % NB_RECT_DODGE;
-		SDL_Rect to_dodge = rect_dodge[c];
-		int *nb_frame = malloc(sizeof(int));
-		*nb_frame = 0;
-    	while(play==1){
-    		play = play_game_4(game_event,renderer,player_rect,to_dodge,nb_frame,speed);
-		    SDL_RenderPresent(renderer);
-		    SDL_Delay(REFRESH); 
-    	}	
-    	if (play != 2){
-    		values->score++;
-    	}
-    	*speed = *speed + (*speed / INITIAL_SPEED );
-    	free(nb_frame);
-    	b = (play != 2 ? 1 : 0) ;
+ 	int play = 1;
+	while (play){
+		play = play_game_4(game_event,renderer,values,player_rect,speed,nb_rect_dodge,rect_dodge);
+		SDL_RenderPresent(renderer);
+		SDL_Delay(REFRESH); 
+    		
+    	// *speed = *speed + (*speed / INITIAL_SPEED ); // Changer la fréquence d'apparition de cette ligne 
+
     }
-    
-    free(speed);
+   	free(speed);
     free(player_rect);
+    for (int i = 0; i < *nb_rect_dodge ; i++){ // Pour être sûr on pourrait carrément tout le tableau (selon NB_RECT_DODGE qui vaut ici 50)
+    	free(rect_dodge[i]); // rect_dodge is pointer to an array of pointer
+    }
     free(rect_dodge);
+    free(nb_rect_dodge);
 	printf("Votre score est de %d !\n", values->score);
 }
