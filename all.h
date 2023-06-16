@@ -32,6 +32,8 @@
 #define RED_COLOR 7
 #define TRANSPARENT_WHITE_COLOR 8
 
+#define FONT_SIZE 30
+
 typedef struct{
 	int score;
     int duree;
@@ -42,9 +44,13 @@ SDL_Window *window;
 SDL_Renderer *renderer;
 int st;
 
+TTF_Font* font;
+
 int clean_quit();
 void dessiner_rect(SDL_Color c, int x, int y, int w, int h);
-void actualiserWindow(SDL_Renderer *renderer);
+void baseBg(SDL_Renderer *renderer, int score, int remaining_time, int withoutTime);
+void setBg(SDL_Renderer *renderer);
+void showInfo(SDL_Renderer *renderer, int score, int remaining_time, int withoutTime);
 int main_menu();
 void initialisation();
 Values_game_simple* init_game_simple();

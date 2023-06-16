@@ -23,6 +23,9 @@ void initialisation(){
 
 	st = EXIT_FAILURE;
 
+	TTF_Init();
+	font = TTF_OpenFont("roboto-bold.ttf", FONT_SIZE);
+	
 	if(SDL_Init(SDL_INIT_VIDEO) != 0){
 		fprintf(stderr, "Impossible d'initialiser la SDL : %s", SDL_GetError());
 		clean_quit();
@@ -40,7 +43,6 @@ void initialisation(){
 		clean_quit();
 	}
 	
-	TTF_Init();
 }
 
 int clean_quit(){
@@ -50,7 +52,8 @@ int clean_quit(){
     if(window != NULL){
         SDL_DestroyWindow(window);
     }
-  
+	TTF_CloseFont(font);
+	TTF_Quit();
     SDL_Quit();
     return st;
 }
@@ -61,9 +64,35 @@ void dessiner_rect(SDL_Color c, int x, int y, int w, int h){
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void actualiserWindow(SDL_Renderer *renderer){
+void setBg(SDL_Renderer *renderer){
 	SDL_SetRenderDrawColor(renderer, colors[BGC].r, colors[BGC].g, colors[BGC].b, colors[BGC].a);
-    SDL_RenderClear(renderer);
+	SDL_RenderClear(renderer);
+}
+
+void showInfo(SDL_Renderer *renderer, int score, int remaining_time, int withoutTime){
+	char text[50];
+	if(withoutTime){
+		sprintf(text, "Score : %d ", score);
+	}else{
+    	sprintf(text, "Temps restant : %d         Score : %d ", remaining_time/1000, score);
+    }
+
+	int width_text, height_text;
+    TTF_SizeText(font, text, &width_text, &height_text);
+	SDL_Rect infos_rect = {20,WINDOW_HEIGHT-height_text-10,width_text,height_text};
+	
+	SDL_Surface* surface;
+    SDL_Texture* texture;
+	surface = TTF_RenderText_Solid(font, text, colors[WHITE_COLOR]); 
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_RenderCopy(renderer, texture, NULL, &infos_rect);
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(surface);
+}
+
+void baseBg(SDL_Renderer *renderer, int score, int remaining_time, int withoutTime){
+	setBg(renderer);
+	showInfo(renderer,score,remaining_time,withoutTime);
 }
 
 int main_menu(){
@@ -72,7 +101,7 @@ int main_menu(){
     SDL_Event menu_event;  
    	SDL_Point point;
    	
-   	actualiserWindow(renderer);
+   	setBg(renderer);
    	SDL_SetRenderDrawColor(renderer, colors[BUTTON1_COLOR].r, colors[BUTTON1_COLOR].g, colors[BUTTON1_COLOR].b, colors[BUTTON1_COLOR].a);
     SDL_Rect button1 = {BUTTON_COL1,BUTTON_LINE1,BUTTON_WIDTH,BUTTON_HEIGHT};
     SDL_RenderFillRect(renderer, &button1);
@@ -124,4 +153,8 @@ Values_game_simple* init_game_simple(){
 	(*values).duree = TIME;
 	return values;
 }
+
+		
+		
+		
 

@@ -34,7 +34,7 @@ int play_game_1(SDL_Event game_event,Values_game_1* values,SDL_Renderer *rendere
 	if (values->wrong > 0){
 		values->wrong--;
 	}	
-    actualiserWindow(renderer);
+    baseBg(renderer,values->score,values->duree,0);
     dessiner_rect(colors[WHITE_COLOR], SPACE_X, SPACE_Y,SPACE_WIDTH,SPACE_HEIGHT);
    	dessiner_rect(colors[GREEN_COLOR],cible_x,SPACE_Y,cible_length,SPACE_HEIGHT); 
     dessiner_rect(values->wrong == 0 ? colors[BLACK_COLOR] : colors[RED_COLOR] ,values->player_x,(WINDOW_HEIGHT / 2) - (PLAYER_HEIGHT / 2),PLAYER_WIDTH,PLAYER_HEIGHT);	

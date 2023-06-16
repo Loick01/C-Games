@@ -21,7 +21,7 @@ int play_game_2(SDL_Event game_event,Values_game_simple* values,SDL_Renderer *re
 	}
 	
 	
-	actualiserWindow(renderer);
+	baseBg(renderer,values->score,values->duree,0);
 	SDL_SetRenderDrawColor(renderer, colors[WHITE_COLOR].r, colors[WHITE_COLOR].g, colors[WHITE_COLOR].b, colors[WHITE_COLOR].a);
     SDL_RenderFillRect(renderer, &cible);
     

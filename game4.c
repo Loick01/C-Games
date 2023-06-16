@@ -55,13 +55,13 @@ int play_game_4(SDL_Event game_event,SDL_Renderer *renderer,Values_game_simple* 
 			
 			SDL_Rect temp = {rect_x ,rect_y,WIDTH_RECT,HEIGHT_RECT};
 			new_rect->r = temp;
-			new_rect->lifetime = WINDOW_WIDTH / *speed; // est ce que speed va augmenter ? Si c'est le cas il faudra changer ici
+			new_rect->lifetime = WINDOW_WIDTH / *speed + 5;
 			rect_dodge[*nb_rect_dodge] = new_rect;
 			(*nb_rect_dodge)++;
 		}
 	}
 	
-	actualiserWindow(renderer);
+	baseBg(renderer,values->score,values->duree,1);
 	
 	SDL_SetRenderDrawColor(renderer, colors[WHITE_COLOR].r, colors[WHITE_COLOR].g, colors[WHITE_COLOR].b, colors[WHITE_COLOR].a);
     SDL_RenderFillRect(renderer, player_rect);

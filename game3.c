@@ -43,7 +43,7 @@ void main_loop_game_3(SDL_Event game_event,Values_game_simple* values,SDL_Render
 		}
 		next[NUMBER_FOLLOWING_LETTER-1] = (char) new_lettre;
 		
-		actualiserWindow(renderer);
+		baseBg(renderer,values->score,values->duree,0);
 		
 		surface_lettre = TTF_RenderText_Solid(font_lettre, cible, colors[WHITE_COLOR]); 
 		texture_lettre = SDL_CreateTextureFromSurface(renderer, surface_lettre);
