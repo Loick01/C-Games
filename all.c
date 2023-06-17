@@ -1,5 +1,12 @@
 #include "all.h"
 
+SDL_Color *colors;
+SDL_Window *window;
+SDL_Renderer *renderer;
+int st;
+
+TTF_Font* font;
+
 void initialisation(){
 	SDL_Color bgc = {2, 81, 112, 255};
 	SDL_Color button1_color = {230, 146, 21, 255};
@@ -122,7 +129,7 @@ int main_menu(){
 			if(menu_event.type == SDL_QUIT){
 				free(x);
 				free(y);
-				return clean_quit(renderer,window);
+				return 0;
 			}
 			if(menu_event.type == SDL_MOUSEBUTTONDOWN){
 				if(menu_event.button.button == SDL_BUTTON_LEFT){

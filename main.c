@@ -21,14 +21,16 @@ int main(/*int argc, char *argv[]*/){
     	values = init_game_simple();
     	main_loop_game_2(game_event,(Values_game_simple*)values,renderer);
     }else if (choix == 3){
-    	values = init_game_simple();
-    	main_loop_game_3(game_event,(Values_game_simple*)values,renderer);
+    	values = init_game_3();
+    	main_loop_game_3(game_event,(Values_game_3*)values,renderer);
     }else if (choix == 4){
     	values = init_game_simple();
     	main_loop_game_4(game_event,(Values_game_simple*)values,renderer);
     }
-    
-    free(values);
+
+	if(choix != 0){
+		free(values);
+	}
     free(colors);
 	return clean_quit();
 }

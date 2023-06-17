@@ -18,7 +18,7 @@
 #define BUTTON_LINE1 120
 #define BUTTON_LINE2 360
 
-#define TIME 30000
+#define TIME 30000 // 30 seconds
 #define REFRESH 20
 
 #define NB_COLOR 9
@@ -39,12 +39,12 @@ typedef struct{
     int duree;
 } Values_game_simple;
 
-SDL_Color *colors;
-SDL_Window *window;
-SDL_Renderer *renderer;
-int st;
+extern SDL_Color *colors;
+extern SDL_Window *window;
+extern SDL_Renderer *renderer;
+extern int st;
 
-TTF_Font* font;
+extern TTF_Font* font;
 
 int clean_quit();
 void dessiner_rect(SDL_Color c, int x, int y, int w, int h);

@@ -2,11 +2,11 @@
 
 Values_game_1* init_game_1(){
 	Values_game_1* values = malloc(sizeof(Values_game_1));
-	(*values).score = 0;
-	(*values).direction = 1;
-	(*values).player_x = SPACE_X;
-	(*values).duree = TIME;
-	(*values).wrong = 0;
+	values->score = 0;
+	values->direction = 1;
+	values->player_x = SPACE_X;
+	values->duree = TIME;
+	values->wrong = 0;
 	return values;
 }
 
