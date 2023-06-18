@@ -7,29 +7,29 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define NB_GAME 5
+
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
 #define BUTTON_WIDTH 300
 #define BUTTON_HEIGHT 120
 
-#define BUTTON_COL1 75
-#define BUTTON_COL2 425
-#define BUTTON_LINE1 120
-#define BUTTON_LINE2 360
+#define BUTTON_X 50
 
 #define TIME 30000 // 30 seconds
 #define REFRESH 20
 
 #define NB_COLOR 9
+
 #define BGC 0
-#define BUTTON1_COLOR 1
-#define BUTTON2_COLOR 2
-#define BUTTON3_COLOR 3
-#define GREEN_COLOR 4
-#define WHITE_COLOR 5
-#define BLACK_COLOR 6
-#define RED_COLOR 7
+#define YELLOW_COLOR 1
+#define GREEN_COLOR 2
+#define PURPLE_COLOR 3
+#define WHITE_COLOR 4
+#define RED_COLOR 5
+#define BLUE_COLOR 6
+#define BLACK_COLOR 7
 #define TRANSPARENT_WHITE_COLOR 8
 
 #define FONT_SIZE 30
@@ -43,6 +43,7 @@ extern SDL_Color *colors;
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern int st;
+extern char** game_title;
 
 extern TTF_Font* font;
 
@@ -53,6 +54,7 @@ void setBg(SDL_Renderer *renderer);
 void showInfo(SDL_Renderer *renderer, int score, int remaining_time, int withoutTime);
 int main_menu();
 void initialisation();
+void printOnScreen(const char* chaine, int x, int y);
 Values_game_simple* init_game_simple();
 
 #endif

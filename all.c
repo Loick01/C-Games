@@ -4,29 +4,37 @@ SDL_Color *colors;
 SDL_Window *window;
 SDL_Renderer *renderer;
 int st;
+char** game_title;
 
 TTF_Font* font;
 
 void initialisation(){
 	SDL_Color bgc = {2, 81, 112, 255};
-	SDL_Color button1_color = {230, 146, 21, 255};
-	SDL_Color button2_color = {166, 8, 16, 255};
-	SDL_Color button3_color = {98, 105, 76, 255};
+	SDL_Color yellow_color = {134, 201, 18, 255};
 	SDL_Color green_color = {5, 99, 35, 255};
+	SDL_Color purple_color = {77, 13, 61, 255};
 	SDL_Color white_color = {255,255,255,255};
-	SDL_Color black_color = {0,0,0,255};
 	SDL_Color red_color = {240,20,20,255};
+	SDL_Color blue_color = {28, 13, 87,255};
+	SDL_Color black_color = {0,0,0,255};
 	SDL_Color transparent_white_color = {255,255,255,100};
 	colors = malloc(sizeof(SDL_Color)*NB_COLOR);
 	colors[0] = bgc;
-	colors[1] = button1_color;
-	colors[2] = button2_color;
-	colors[3] = button3_color;
-	colors[4] = green_color;
-	colors[5] = white_color;
-	colors[6] = black_color;
-	colors[7] = red_color;
+	colors[1] = yellow_color;
+	colors[2] = green_color;
+	colors[3] = purple_color;
+	colors[4] = white_color;
+	colors[5] = red_color;
+	colors[6] = blue_color;
+	colors[7] = black_color;
 	colors[8] = transparent_white_color;
+	
+	game_title = malloc(NB_GAME*sizeof(char*));
+	game_title[0] = "SPACE"; // TODO : Charger depuis un fichier
+	game_title[1] = "SQUARE";
+	game_title[2] = "LETTER";
+	game_title[3] = "DODGE";
+	game_title[4] = "INVADERS";
 
 	st = EXIT_FAILURE;
 
@@ -88,10 +96,8 @@ void showInfo(SDL_Renderer *renderer, int score, int remaining_time, int without
     TTF_SizeText(font, text, &width_text, &height_text);
 	SDL_Rect infos_rect = {20,WINDOW_HEIGHT-height_text-10,width_text,height_text};
 	
-	SDL_Surface* surface;
-    SDL_Texture* texture;
-	surface = TTF_RenderText_Solid(font, text, colors[WHITE_COLOR]); 
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_Surface* surface = TTF_RenderText_Solid(font, text, colors[WHITE_COLOR]); 
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_RenderCopy(renderer, texture, NULL, &infos_rect);
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(surface);
@@ -109,18 +115,18 @@ int main_menu(){
    	SDL_Point point;
    	
    	setBg(renderer);
-   	SDL_SetRenderDrawColor(renderer, colors[BUTTON1_COLOR].r, colors[BUTTON1_COLOR].g, colors[BUTTON1_COLOR].b, colors[BUTTON1_COLOR].a);
-    SDL_Rect button1 = {BUTTON_COL1,BUTTON_LINE1,BUTTON_WIDTH,BUTTON_HEIGHT};
-    SDL_RenderFillRect(renderer, &button1);
-    SDL_SetRenderDrawColor(renderer, colors[BUTTON2_COLOR].r, colors[BUTTON2_COLOR].g, colors[BUTTON2_COLOR].b, colors[BUTTON2_COLOR].a);
-    SDL_Rect button2 = {BUTTON_COL1,BUTTON_LINE2,BUTTON_WIDTH,BUTTON_HEIGHT};
-    SDL_RenderFillRect(renderer, &button2);
-    SDL_SetRenderDrawColor(renderer, colors[BUTTON3_COLOR].r, colors[BUTTON3_COLOR].g, colors[BUTTON3_COLOR].b, colors[BUTTON3_COLOR].a);
-    SDL_Rect button3 = {BUTTON_COL2,BUTTON_LINE1,BUTTON_WIDTH,BUTTON_HEIGHT};
-    SDL_RenderFillRect(renderer, &button3);
-     SDL_SetRenderDrawColor(renderer, colors[BUTTON3_COLOR].r, colors[BUTTON3_COLOR].g, colors[BUTTON3_COLOR].b, colors[BUTTON3_COLOR].a);
-    SDL_Rect button4 = {BUTTON_COL2,BUTTON_LINE2,BUTTON_WIDTH,BUTTON_HEIGHT};
-    SDL_RenderFillRect(renderer, &button4);
+   	SDL_SetRenderDrawColor(renderer, colors[BLUE_COLOR].r, colors[BLUE_COLOR].g, colors[BLUE_COLOR].b, colors[BLUE_COLOR].a);
+   	
+   	SDL_Rect *buttons = malloc(sizeof(SDL_Rect)*NB_GAME);
+   	int button_width = WINDOW_WIDTH - 2*BUTTON_X;
+   	int button_height = ((WINDOW_HEIGHT - BUTTON_X) / NB_GAME) - BUTTON_X;
+   	for (int i = 0 ; i < NB_GAME ; i++){ // Button for menu
+   		SDL_Rect button = {BUTTON_X,BUTTON_X+2*(i*button_height),button_width,button_height };
+    	SDL_RenderFillRect(renderer, &button);
+    	buttons[i] = button;
+    	printOnScreen(game_title[i],BUTTON_X*1.5,BUTTON_X+2*(i*button_height)+BUTTON_X/4);
+   	}
+   	
     SDL_RenderPresent(renderer);
     
    	int choix = 0;
@@ -136,22 +142,33 @@ int main_menu(){
 					SDL_GetMouseState(x,y);
 					point.x = *x;
 					point.y = *y;
-					if (SDL_PointInRect(&point,&button1)){
-						choix = 1;
-					}else if(SDL_PointInRect(&point,&button2)){
-						choix = 2;
-					}else if(SDL_PointInRect(&point,&button3)){
-						choix = 3;
-				}else if(SDL_PointInRect(&point,&button4)){
-						choix = 4;
+					for (int i=0 ; i < NB_GAME ; i++){
+						if (SDL_PointInRect(&point,&(buttons[i]))){
+							choix = ++i;
+						}
 					}
 				}
 			}
+			
 		}
     }
     free(x);
     free(y);
+    free(game_title);
+    free(buttons);
     return choix;
+}
+
+void printOnScreen(const char* text, int x, int y){
+	int width_text, height_text;
+    TTF_SizeText(font, text, &width_text, &height_text);
+	SDL_Rect text_rect = {x,y,width_text,height_text};
+	
+	SDL_Surface* surface = TTF_RenderText_Solid(font, text, colors[WHITE_COLOR]); 
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_RenderCopy(renderer, texture, NULL, &text_rect);
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(surface);
 }
 
 Values_game_simple* init_game_simple(){

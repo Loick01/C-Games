@@ -76,8 +76,8 @@ int play_game_4(SDL_Event game_event,SDL_Renderer *renderer,Values_game_simple* 
     	}
     	
     	(rect_dodge[i])->lifetime--;
-    	(rect_dodge[i])->r.x += *speed * (rect_dodge[i])->dir_x; // Same speed than player
-    	(rect_dodge[i])->r.y += *speed * (rect_dodge[i])->dir_y; // Same speed than player
+    	(rect_dodge[i])->r.x += *speed * (rect_dodge[i])->dir_x; 
+    	(rect_dodge[i])->r.y += *speed * (rect_dodge[i])->dir_y; 
     	
     	
     	if ((rect_dodge[i])->lifetime == 0){
@@ -118,7 +118,7 @@ void main_loop_game_4(SDL_Event game_event,Values_game_simple* values,SDL_Render
     }
    	free(speed);
     free(player_rect);
-    for (int i = 0; i < *nb_rect_dodge ; i++){ // Pour être sûr on pourrait carrément tout le tableau (selon NB_RECT_DODGE qui vaut ici 50)
+    for (int i = 0; i < *nb_rect_dodge ; i++){
     	free(rect_dodge[i]); // rect_dodge is pointer to an array of pointer
     }
     free(rect_dodge);
