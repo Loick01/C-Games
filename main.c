@@ -32,8 +32,8 @@ int main(/*int argc, char *argv[]*/){
     		main_loop_game_4(game_event,(Values_game_simple*)values,renderer);
     		break;
     	case 5:
-    		values = init_game_simple();
-    		main_loop_game_5(game_event,(Values_game_simple*)values,renderer);
+    		values = init_game_5();
+    		main_loop_game_5(game_event,(Values_game_5*)values,renderer);
     		break;
     }
     		

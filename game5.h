@@ -10,13 +10,31 @@
 #define NB_FOE_LINE 6
 #define NB_FOE_COLUMN 10
 
+#define WIDTH_TIR 10
+#define HEIGHT_TIR 30
+#define SPEED_TIR 15
+
 typedef struct{
 	SDL_Rect r;
 	int position;
 } FoeStruct ;
 
-int play_game_5(SDL_Event game_event,SDL_Renderer *renderer,Values_game_simple* values,SDL_Rect *player_rect,int* speed,int* delai_tir,FoeStruct* foes,int* nb_foes);
-void main_loop_game_5(SDL_Event game_event,Values_game_simple* values,SDL_Renderer *renderer);
-void drawFoes(int* nb_foes,FoeStruct* foes,SDL_Renderer *renderer);
+typedef struct{
+	int score;
+    int duree;
+    int speed;
+    SDL_Rect *player_rect;
+    int delai_tir;
+    FoeStruct* foes;
+    int nb_foes;
+    SDL_Rect** tirs;
+    int nb_tirs;
+    FoeStruct** direct_foes;
+} Values_game_5 ;
+
+Values_game_5* init_game_5();
+int play_game_5(SDL_Event game_event,SDL_Renderer *renderer,Values_game_5* values);
+void main_loop_game_5(SDL_Event game_event,Values_game_5* values,SDL_Renderer *renderer);
+void drawFoes(int nb_foes,FoeStruct* foes,SDL_Renderer *renderer);
 
 #endif
