@@ -25,8 +25,7 @@ typedef struct{
     int speed;
     SDL_Rect *player_rect;
     int delai_tir;
-    FoeStruct* foes;
-    int nb_foes;
+    FoeStruct** foes;
     SDL_Rect** tirs;
     int nb_tirs;
     FoeStruct** direct_foes;
@@ -35,6 +34,6 @@ typedef struct{
 Values_game_5* init_game_5();
 int play_game_5(SDL_Event game_event,SDL_Renderer *renderer,Values_game_5* values);
 void main_loop_game_5(SDL_Event game_event,Values_game_5* values,SDL_Renderer *renderer);
-void drawFoes(int nb_foes,FoeStruct* foes,SDL_Renderer *renderer);
+void drawFoes(FoeStruct** foes,SDL_Renderer *renderer);
 
 #endif

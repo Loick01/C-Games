@@ -1,2 +1,21 @@
 Installation :
 sudo apt-get install libsdl2-dev libsdl2-ttf-dev
+
+Game 1 : Space Game
+Appuyez sur la barre d'espace quand la barre noire est dans la zone verte
+
+Game 2 : Square Game
+Cliquez sur les carrés
+
+Game 3 : Letter Game
+Appuyez sur la touche du clavier correspondante à la lettre blanche à l'écran
+
+Game 4 : Dodge Game
+Controlez le carré blanc avec Z,Q,S,D et esquivez les carrés rouges
+
+--- En cours ---
+
+Game 5 : Invaders Game 
+Controlez le carré blanc avec Q et D, tirez avec la barre d'espace sur les carrés rouges et ne les laissez pas vous atteindre
+
+
