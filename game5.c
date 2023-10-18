@@ -51,8 +51,12 @@ void deleteTir(Values_game_5* values,int i){
 
 void deleteFoe(Values_game_5* values,int col){
 	int n = ((values->direct_foes)[col])->position;
-	free((values->direct_foes)[col]); // also free in values->foes because it's the same pointer 
-	(values->direct_foes)[col] = values->foes[n-NB_FOE_COLUMN];
+	free((values->direct_foes)[col]); // also free in values->foes because it's the same pointer
+	if (n-NB_FOE_COLUMN >= 0){ 
+		(values->direct_foes)[col] = values->foes[n-NB_FOE_COLUMN];
+	}else{
+		(values->direct_foes)[col] = NULL;
+	}
 	values->foes[n] = NULL;
 }
 
